@@ -12,3 +12,21 @@ def ask_llm(prompt: str) -> str:
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
+
+def generate_sql(question: str, schema: str) -> str:
+    """
+    Takes a natural language question + the database schema,
+    returns a SQL query string.
+    """
+    prompt = f"""You are a SQL expert. Given the database schema below,
+write a SQL query to answer the question. Return ONLY the SQL query,
+no explanation, no markdown, no backticks.
+
+Schema:
+{schema}
+
+Question: {question}
+
+SQL Query:"""
+
+    return ask_llm(prompt)
