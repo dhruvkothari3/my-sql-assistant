@@ -1,29 +1,44 @@
 from fastapi import FastAPI
-from llm import ask_llm
-from database import get_schema, run_query
+
+from database import get_schema, get_join_hints, run_query, is_safe_query
 from llm import generate_sql
 
 app = FastAPI()
 
-@app.get("/test")
-def test():
-    response = ask_llm("Say hello and confirm you are working.")
-    return {"response": response}
+
 
 @app.get("/ask")
 def ask(question: str):
-    # step 1: get the database schema
     schema = get_schema()
-
-    # step 2: send question + schema to LLM, get SQL back
-    sql = generate_sql(question, schema)
-
-    # step 3: run that SQL on the database
-    results = run_query(sql)
-
-    # step 4: return everything
-    return {
-        "question": question,
-        "sql_generated": sql,
-        "results": results
-    }
+    joins = get_join_hints()
+    
+    # generate SQL
+    sql = generate_sql(question, schema, joins)
+    
+    # safety check before running anything
+    safe, reason = is_safe_query(sql)
+    if not safe:
+        return {
+            "question": question,
+            "sql_generated": sql,
+            "error": f"Query blocked: {reason}",
+            "results": []
+        }
+    
+    # run safe query
+    try:
+        results = run_query(sql)
+        return {
+            "question": question,
+            "sql_generated": sql,
+            "results": results
+        }
+    except Exception as e:
+        # catch bad SQL gracefully instead of crashing
+        return {
+            "question": question,
+            "sql_generated": sql,
+            "error": f"Query failed: {str(e)}",
+            "results": []
+        }
+    

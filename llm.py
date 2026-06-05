@@ -13,20 +13,26 @@ def ask_llm(prompt: str) -> str:
     )
     return response.choices[0].message.content
 
-def generate_sql(question: str, schema: str) -> str:
-    """
-    Takes a natural language question + the database schema,
-    returns a SQL query string.
-    """
-    prompt = f"""You are a SQL expert. Given the database schema below,
-write a SQL query to answer the question. Return ONLY the SQL query,
-no explanation, no markdown, no backticks.
+def generate_sql(question: str, schema: str, joins: str) -> str:
+    prompt = f"""You are a SQLite expert.
 
-Schema:
+DATABASE SCHEMA:
 {schema}
 
-Question: {question}
+AVAILABLE JOINS (use these exact JOIN patterns when combining tables):
+{joins}
 
-SQL Query:"""
+RULES:
+- Use LIMIT not TOP
+- SQLite syntax only
+- Always use GROUP BY when using COUNT with ORDER BY
+- Use the exact JOIN patterns shown above
+- Never reference a column that is not in the schema
+- Always put a space before LIMIT
+- To count records from another table, always JOIN that table first then count its column
+- Return ONLY the raw SQL query on a single line, nothing else
+
+Question: {question}
+SQLite Query:"""
 
     return ask_llm(prompt)
