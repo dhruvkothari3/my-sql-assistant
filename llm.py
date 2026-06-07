@@ -30,7 +30,21 @@ RULES:
 - Never reference a column that is not in the schema
 - Always put a space before LIMIT
 - To count records from another table, always JOIN that table first then count its column
+- Only JOIN tables when the question actually requires data from multiple tables
+- If the question only mentions one table, query that table directly with no JOINs
+- Always SELECT meaningful columns like names, titles, totals not just IDs
 - Return ONLY the raw SQL query on a single line, nothing else
+- Only use LIMIT when the question asks for a specific number of results like "top 5" or "one" or "highest"
+- Do not add LIMIT when the question says "all" or "show me"
+
+EXAMPLE OF WRONG vs RIGHT:
+Question: show tracks longer than 5 minutes
+WRONG: SELECT * FROM Track JOIN MediaType ON Track.MediaTypeId = MediaType.MediaTypeId WHERE Milliseconds > 300000
+RIGHT: SELECT * FROM Track WHERE Milliseconds > 300000
+
+Question: which invoice has highest total
+WRONG: SELECT i.InvoiceId FROM Invoice i JOIN Customer c ON i.CustomerId = c.CustomerId ORDER BY i.Total DESC LIMIT 1  
+RIGHT: SELECT InvoiceId, Total FROM Invoice ORDER BY Total DESC LIMIT 1
 
 Question: {question}
 SQLite Query:"""

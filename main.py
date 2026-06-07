@@ -56,4 +56,10 @@ def ask(question: str):
             "error": f"Query failed: {str(e)}",
             "results": []
         }
+    
+@app.get("/clear-cache")
+def clear_cache():
+    from cache import redis
+    redis.flushdb()
+    return {"message": "Cache cleared"}
         
