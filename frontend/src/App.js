@@ -11,7 +11,7 @@ function App() {
     setResponse(null);
 
     const res = await fetch(
-      `http://localhost:8000/ask?question=${encodeURIComponent(question)}`
+      `/ask?question=${encodeURIComponent(question)}`
     );
     const data = await res.json();
     setResponse(data);

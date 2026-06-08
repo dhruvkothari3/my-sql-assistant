@@ -15,6 +15,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
+
+@app.get("/")
+def serve_react():
+    return FileResponse("frontend/build/index.html")
 
 
 
