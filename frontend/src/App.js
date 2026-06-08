@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div style={{ maxWidth: "800px", margin: "40px auto", padding: "20px", fontFamily: "Arial" }}>
-      
+
       <h1>AI SQL Assistant</h1>
       <p>Ask a question about the music database in plain English.</p>
 
@@ -43,7 +43,11 @@ function App() {
       </div>
 
       {/* Loading state */}
-      {loading && <p>Thinking...</p>}
+      {loading && (
+        <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+          <p>⏳ Thinking... generating SQL...</p>
+        </div>
+      )}
 
       {/* Results */}
       {response && (
@@ -53,6 +57,18 @@ function App() {
             <strong>SQL Generated:</strong>
             <pre style={{ margin: "8px 0 0", overflowX: "auto" }}>{response.sql_generated}</pre>
           </div>
+
+          {/* Steps */}
+          {response.steps && (
+            <div style={{ background: "#E1F5EE", padding: "15px", borderRadius: "6px", marginBottom: "15px" }}>
+              <strong>Steps:</strong>
+              <ol style={{ margin: "8px 0 0", paddingLeft: "20px" }}>
+                {response.steps.map((step, i) => (
+                  <li key={i} style={{ marginBottom: "4px", fontSize: "14px", color: "#0F6E56" }}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          )}
 
           {/* Error */}
           {response.error && (
