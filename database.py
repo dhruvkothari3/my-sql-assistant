@@ -119,12 +119,9 @@ def is_safe_query(sql: str) -> tuple[bool, str]:
     
 
 def clean_sql(sql: str) -> str:
-    """
-    Basic cleaning to prevent SQL injection.
-    This is a simple example and can be expanded.
-    """
     sql = sql.replace("```sql", "").replace("```", "")
     sql = sql.strip()
     if sql.lower().startswith("sql"):
         sql = sql[3:].strip()
+    sql = sql.rstrip(";")  # remove trailing semicolon
     return sql
