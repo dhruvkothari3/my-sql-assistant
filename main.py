@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from database import get_schema, get_join_hints, run_query, is_safe_query
+from database import get_schema, get_join_hints, run_query, is_safe_query, clean_sql
 from llm import generate_sql
 from cache import get_from_cache, save_to_cache
 app = FastAPI()
@@ -22,6 +22,7 @@ def ask(question: str):
     print(f"STEP 2 - Schema loaded: {len(schema)} characters")
     
     sql = generate_sql(question, schema, joins)
+    sql = clean_sql(sql)
     print(f"STEP 3 - SQL generated: {sql}")
     
     safe, reason = is_safe_query(sql)

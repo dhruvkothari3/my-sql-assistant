@@ -98,7 +98,7 @@ def is_safe_query(sql: str) -> tuple[bool, str]:
     """
     # convert to uppercase for checking
     sql_upper = sql.upper().strip()
-
+    
     # block dangerous keywords
     dangerous = ["DROP", "DELETE", "UPDATE", "INSERT", 
                  "ALTER", "TRUNCATE", "CREATE", "REPLACE"]
@@ -107,9 +107,24 @@ def is_safe_query(sql: str) -> tuple[bool, str]:
         # check as whole word not substring
         if f" {word} " in f" {sql_upper} ":
             return False, f"Query contains forbidden keyword: {word}"
+    if ";" in sql:
+        return False, "Query contains semicolon - possible injection attack"
 
     # must start with SELECT
     if not sql_upper.startswith("SELECT"):
         return False, "Only SELECT queries are allowed"
 
     return True, ""
+
+    
+
+def clean_sql(sql: str) -> str:
+    """
+    Basic cleaning to prevent SQL injection.
+    This is a simple example and can be expanded.
+    """
+    sql = sql.replace("```sql", "").replace("```", "")
+    sql = sql.strip()
+    if sql.lower().startswith("sql"):
+        sql = sql[3:].strip()
+    return sql
