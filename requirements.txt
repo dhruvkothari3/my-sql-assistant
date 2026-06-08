@@ -7,3 +7,5 @@ psycopg2-binary
 langchain
 langchain-google-genai
 langchain-community
+groq
+upstash-redis
