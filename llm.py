@@ -29,11 +29,15 @@ RULES:
 - Use the exact JOIN patterns shown above
 - Never reference a column that is not in the schema
 - Always put a space before LIMIT
+- When using JOINs always prefix column names with the table name like Artist.ArtistId not just ArtistId
 - To count records from another table, always JOIN that table first then count its column
 - Only JOIN tables when the question actually requires data from multiple tables
 - If the question only mentions one table, query that table directly with no JOINs
 - Always SELECT meaningful columns like names, titles, totals not just IDs
 - Return ONLY the raw SQL query on a single line, nothing else
+- Always SELECT the COUNT value as a named column for example COUNT(t.TrackId) AS track_count
+- When using table aliases, always use the alias consistently - never mix the alias with the original table name
+- Always include all relevant columns in SELECT including any COUNT or aggregate values used in ORDER BY
 - Only use LIMIT when the question asks for a specific number of results like "top 5" or "one" or "highest"
 - Do not add LIMIT when the question says "all" or "show me"
 

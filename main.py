@@ -3,7 +3,18 @@ from fastapi import FastAPI
 from database import get_schema, get_join_hints, run_query, is_safe_query, clean_sql
 from llm import generate_sql
 from cache import get_from_cache, save_to_cache
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # add this
+
 app = FastAPI()
+
+# add this block
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 
